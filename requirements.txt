@@ -1,0 +1,5 @@
+awscrt==0.32.1
+awsiotsdk==1.29.0
+ipaddress==1.0.23
+keyboard==0.13.5
+ldc-common @ git+https://github.com/nadaluttilogicahs/ldc-common.git@6be28e52e7728831d460141c1a38966f8b898e06

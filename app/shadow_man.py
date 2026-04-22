@@ -2,20 +2,13 @@
 import sys
 import os
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-# import _sqlite
-# import _def
-from _python_com import _sqlite, _def, _utility
+from ldc_common import _utility
 
 import time
 import aws_shadow
+from data_man import query_db
 #import boto3
 
-DB_SET = _def.work_dir + _def.DB_SET_D
-DB_RTD = _def.work_dir + _def.DB_RTD_D
-
-DB_LAN = _def.work_dir + _def.DB_LAN_D
-DB_PRG = _def.work_dir + _def.DB_PRG_D
 
 ShadowsToDel = ('alarms', 'cycleInfo', 'mainSets')
 # ShadowsToDel = ("alarms")
@@ -141,15 +134,17 @@ def shadowUpdateAlarms (shadowName):
 
     table_name = 'eventsMatrix'
     query = ('SELECT ID, ref, em_type FROM ' + table_name)
-    events = _sqlite.select_task_by_query(DB_SET, query)
+    events = query_db('settings', query)
 
     # for item in events:
     #     # Rinomina la chiave "ref" in "ID" spostando il valore
     #     item['ID'] = item.pop('ref')
 
-    table_name = 'alarms'
-    query = ('SELECT ID, active, timeout FROM ' + table_name)
-    alarms = _sqlite.select_task_by_query(DB_RTD, query)
+    # table_name = 'alarms'
+    # query = ('SELECT ID, active, timeout FROM ' + table_name)
+    # alarms = query_db('rtd', query)
+    query = ('GET_events')
+    alarms = query_db('CORE', query, use_socket=True)
 
     # for item in alarms:
     #     # Rinomina la chiave "name" in "ID" spostando il valore
@@ -204,20 +199,23 @@ def shadowUpdateCycleInfo (shadowName):
     print(f"Update shadow...{shadowName}")
 
     table_name = 'rtd'
-    query = ('SELECT * FROM ' + table_name)
-    rtd = _sqlite.select_task_by_query(DB_RTD, query)
-    # result = listToDict(rtd)
-    # aws_shadow.shadowUpdateArray(shadowName, table_name, result, False)
-    payload[table_name] = listToDict(rtd)
+    # query = ('SELECT * FROM ' + table_name)
+    # rtd = query_db('rtd', query)
+    # payload[table_name] = listToDict(rtd)
+    query = ('GET_idIntTab rtd')
+    rtd = query_db('CORE', query, use_socket=True)
+    # print("DEBUG rtd:", rtd)
+    if rtd:
+        item = dict(rtd[0])
+        item.pop('packetNum', None)
+        payload[table_name] = {"1": item}
 
     # time.sleep(1) 
 
     table_name = 'sets_work'
-    query = ('SELECT ID, value, description FROM ' + table_name)
+    # query = ('SELECT ID, value, description FROM ' + table_name)
     query = ('SELECT ID, value FROM ' + table_name)
-    sets_work = _sqlite.select_task_by_query(DB_SET, query)
-    # result = listToDict(sets_work)
-    # aws_shadow.shadowUpdateArray(shadowName, table_name, result, False)
+    sets_work = query_db('settings', query)
     payload[table_name] = listToDict(sets_work)
 
     # time.sleep(1) 
@@ -225,26 +223,23 @@ def shadowUpdateCycleInfo (shadowName):
     group_name = 'PhasesInfoBFC'         # BFC = build for cloud
     table_name = 'CurPrg'
     query = ('SELECT COUNT(*) FROM ' + table_name)
-    result = _sqlite.select_task_by_query(DB_PRG, query)
+    result = query_db('prg', query)
     phases_num = [{'ID': 'PhasesNum', 'value': result[0]['COUNT(*)']}]
-    # result = listToDict(phases_num)
-    # aws_shadow.shadowUpdateArray(shadowName, group_name, result, False)
     payload[group_name] = listToDict(phases_num)
     
     
     table_name = 'io'
-    query = ('SELECT name, val FROM ' + table_name)
-    io = _sqlite.select_task_by_query(DB_RTD, query)
-    # result = listToDict(io)
-    # aws_shadow.shadowUpdateArray(shadowName, table_name, result, False)
+    # query = ('SELECT name, val FROM ' + table_name)
+    # io = query_db('rtd', query)
+    query = ('GET_idIntTab io')
+    io = query_db('CORE', query, use_socket=True)
+    # print("DEBUG io:", io)
     payload[table_name] = listToDict(io, 'name')
     
     
     table_name = 'sets_cOptions'
     query = ('SELECT ID, value FROM ' + table_name + ' WHERE ID IN ("tempUnit","humiUnit")')
-    sets_cOptions = _sqlite.select_task_by_query(DB_SET, query)
-    # result = listToDict(sets_cOptions)
-    # aws_shadow.shadowUpdateArray(shadowName, table_name, result, False)
+    sets_cOptions = query_db('settings', query)
     payload[table_name] = listToDict(sets_cOptions)
     
     # Una singola chiamata con tutto il payload
@@ -258,7 +253,7 @@ def shadowUpdateMainSets (shadowName):
 
     table_name = 'sets_manualMode'
     query = ('SELECT ID, value, minValue, maxValue FROM ' + table_name)
-    sets_manualMode = _sqlite.select_task_by_query(DB_SET, query)
+    sets_manualMode = query_db('settings', query)
     payload[table_name] = listToDict(sets_manualMode)
     
     # Una singola chiamata con tutto il payload
@@ -273,29 +268,18 @@ def shadowUpdateFromQuery (table_name, id_name, query, db):
     
     print(f"Update shadow...{shadowName}")
 
-    result = _sqlite.select_task_by_query(db, query)
+    result = query_db(db, query)
     result = listToDict(result, id_name)
     aws_shadow.shadowUpdateArray(shadowName, table_name, result, False)
     
 
 def shadowUpdateSync ():
-# if __name__ == '__main__': 
-#     query = ("SELECT ref, em_type FROM eventsMatrix")
-#     result = _sqlite.select_task_by_query(_def.work_dir + _def.DB_SET_D, query)
-#     aws_shadow.shadowUpdate("alarm", "alarm", result, True)
-#     print(result)
-
-    # table_name = 'sets_cOptions'
-    # query = ('SELECT ID, value FROM ' + table_name)
-    # result = _sqlite.select_task_by_query(_def.work_dir + _def.DB_SET_D, query)
-    # aws_shadow.shadowUpdateArray('settingsArray', table_name, result, False)
-    # shadowUpdateSingleDict("settings", table_name, result, False)
 
     shadowUpdateAlarms('alarms')
     time.sleep(1)  
     shadowUpdateCycleInfo('cycleInfo')
     time.sleep(1)  
     shadowUpdateMainSets('mainSets')
-    # shadowUpdateFromQuery('io', 'name', 'SELECT name, val FROM io', DB_RTD)
+    # shadowUpdateFromQuery('io', 'name', 'SELECT name, val FROM io', PATHS.db_rtd)
 
     # print(alarms_dict)

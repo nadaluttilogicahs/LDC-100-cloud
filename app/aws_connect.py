@@ -3,10 +3,8 @@
 import os
 import sys
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-# import _sqlite
-# import _def
-from _python_com import _sqlite, _def
+from ldc_common._paths import PATHS
+from ldc_common import _sqlite
 
 import argparse
 from awscrt import auth, io, mqtt, http
@@ -27,8 +25,8 @@ import pubsub_man
 from awscrt.mqtt import Will, QoS
 
 
-certs_dir = _def.certs_dir
-dev_info_dir = _def.dev_info_dir
+certs_dir = PATHS.certs_dir
+dev_info_dir = PATHS.dev_info_dir
 
 
 # Using globals to simplify sample code

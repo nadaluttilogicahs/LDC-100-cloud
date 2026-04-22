@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
+import argparse
 import sys
 
+from __version__ import __version__
 import aws_connect
 import time
 import shadow_man
@@ -12,11 +14,16 @@ import shadow_man
 ##############################################################
 
 #================================================================================
-SW_VERSION                         = 3  # != 0 
+SW_VERSION                         = __version__  # != 0 
 
 #================================================================================
 
 if __name__ == '__main__': 
+    parser = argparse.ArgumentParser(description='LDC-100 Cloud Software by LOGICA H&S Srl')
+    parser.add_argument('--version', action='version', version=f'%(prog)s {SW_VERSION}')
+    
+    args, unknown = parser.parse_known_args()  # ignora argomenti sconosciuti
+    
     print("")
     print('-------------------------------------------------------')
     print("LDC-100 CLOUD SOFTWARE by LOGICA H&S Srl. Version: ", SW_VERSION)
