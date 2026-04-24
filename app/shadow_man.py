@@ -5,8 +5,8 @@ import os
 from ldc_common import _utility
 
 import time
-import aws_shadow
-from data_man import query_db
+from . import aws_shadow
+from .data_man import query_db
 #import boto3
 
 

@@ -1,5 +1,5 @@
 import json
-import aws_connect
+from . import aws_connect
 
 # Callback per la ricezione delle notifiche del tunnel
 def on_tunnel_notification(topic, payload, **kwargs):

@@ -16,12 +16,11 @@ import traceback
 from uuid import uuid4
 
 import json
-import de01cloud
 import pdb
 import time
-import aws_jobs
-import aws_shadow
-import pubsub_man
+# import aws_jobs
+from . import aws_shadow
+from . import pubsub_man
 from awscrt.mqtt import Will, QoS
 
 

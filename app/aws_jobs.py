@@ -16,7 +16,7 @@ import traceback
 import time
 # from utils.command_line_utils import CommandLineUtils
 
-import aws_connect
+from . import aws_connect
 
 # - Overview -
 # This sample uses the AWS IoT Jobs Service to get a list of pending jobs and

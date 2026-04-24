@@ -18,8 +18,8 @@ from uuid import uuid4
 
 import json
 
-import aws_connect
-import shadow_man
+from . import aws_connect
+from . import shadow_man
 
 # - Overview -
 # This sample uses the AWS IoT Device Shadow Service to keep a property in

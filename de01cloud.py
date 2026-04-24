@@ -3,9 +3,11 @@ import argparse
 import sys
 
 from __version__ import __version__
-import aws_connect
+# from app.aws_connect import connect
+# import app.aws_connect as aws
+from app import aws_connect
 import time
-import shadow_man
+from app import shadow_man
 
 ##############################################################
 # Comandi per compilare 

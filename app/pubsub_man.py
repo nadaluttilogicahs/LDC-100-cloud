@@ -3,8 +3,8 @@ import sys
 import os
 
 import json
-import aws_connect
-from data_man import query_db
+from . import aws_connect
+from .data_man import query_db
 
 
 def awsSqlQuery (paylod):
