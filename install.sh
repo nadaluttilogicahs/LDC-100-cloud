@@ -29,9 +29,6 @@ sudo -u ${SERVICE_USR} mkdir -p ${SERVICE_DIR}
 sudo -u ${SERVICE_USR} echo "Copia contenuti nella cartella creata"
 sudo -u ${SERVICE_USR} cp -r * ${SERVICE_DIR}
 
-cp -r ${SERVICE_DIR}/resources/aws-iot /opt/
-chown -R ${SERVICE_USR}:${SERVICE_USR} /opt/aws-iot/
-
 sudo -u ${SERVICE_USR} python3 -m venv ${SERVICE_DIR}/.venv
 
 sudo -u ${SERVICE_USR} echo "Creazione ambiente virtuale Python"
