@@ -1,11 +1,12 @@
 [Unit]
 Description="LDC-100-cloud service"
 After=network.target
+After=ldc-100-aws-iot.service
 
 [Service]
 Type=simple
 LogLevelMax=3
-Restart=Always
+Restart=always
 User=lg58
 Group=lg58
 ExecStart=/home/lg58/LDC-100/cloud/systemd_cloud.sh
