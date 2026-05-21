@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import argparse
 import sys
+import json
 
-from __version__ import __version__
 # from app.aws_connect import connect
 # import app.aws_connect as aws
 from app import aws_connect
@@ -14,17 +14,25 @@ from app import shadow_man
 # cd cloud
 # pyinstaller --onefile --clean --paths=/home/lg58/LDC-100 de01cloud.py
 ##############################################################
-
+info_file = "version.json"
 #================================================================================
-SW_VERSION                         = __version__  # != 0 
 
+def get_version():
+    try:
+        with open(info_file, "r", encoding="utf-8") as file:
+            data = json.load(file)
+            versione = data.get("version")
+    except FileNotFoundError:
+        print(f"Errore: Il file '{info_file}' non esiste.")
+    except json.JSONDecodeError:
+        print("Errore: Il file non contiene un formato JSON valido.")
+    return versione
 #================================================================================
 
 if __name__ == '__main__': 
     parser = argparse.ArgumentParser(description='LDC-100 Cloud Software by LOGICA H&S Srl')
-    parser.add_argument('--version', action='version', version=f'%(prog)s {SW_VERSION}')
-    
     args, unknown = parser.parse_known_args()  # ignora argomenti sconosciuti
+    SW_VERSION = get_version
     
     print("")
     print('-------------------------------------------------------')
