@@ -32,7 +32,7 @@ def get_version():
 if __name__ == '__main__': 
     parser = argparse.ArgumentParser(description='LDC-100 Cloud Software by LOGICA H&S Srl')
     args, unknown = parser.parse_known_args()  # ignora argomenti sconosciuti
-    SW_VERSION = get_version
+    SW_VERSION = get_version()
     
     print("")
     print('-------------------------------------------------------')
