@@ -51,7 +51,7 @@ aprire altre istanze della connessione mqtt
 """
 # Callback when the subscribed topic receives a message
 def on_message_received(topic, payload, dup, qos, retain, **kwargs):
-    time.sleep(0.5) 
+    # time.sleep(0.5) 
     print("Received message from topic '{}': {}".format(topic, payload))
     global received_count
     received_count += 1
