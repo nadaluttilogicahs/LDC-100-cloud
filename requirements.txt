@@ -1,4 +1,3 @@
-awscrt>=0.32.1
 awsiotsdk>=1.29.0
 ipaddress>=1.0.23
 httpx>=0.27.0
