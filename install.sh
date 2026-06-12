@@ -21,18 +21,22 @@ sudo -u ${SERVICE_USR} echo "Installazione LDC-100-cloud.service"
 sudo -u ${SERVICE_USR} echo "Installazione dipendenze"
 
 apt update
-apt install -y python3 python3-pip python3-venv
+apt install -y python3.13 python3-pip python3.13-venv
 
 sudo -u ${SERVICE_USR} echo "Creazione cartella per file di servizio"
 sudo -u ${SERVICE_USR} mkdir -p ${SERVICE_DIR}
 
 sudo -u ${SERVICE_USR} echo "Copia contenuti nella cartella creata"
-sudo -u ${SERVICE_USR} cp -r * ${SERVICE_DIR}
+cp -r * ${SERVICE_DIR}
+
+chown -R ${SERVICE_USR}:${SERVICE_USR} ${SERVICE_DIR}
+chmod -R 750 ${LDC_BASE_DIR}
 
 sudo -u ${SERVICE_USR} python3 -m venv ${SERVICE_DIR}/.venv
 
 sudo -u ${SERVICE_USR} echo "Creazione ambiente virtuale Python"
 sudo -u ${SERVICE_USR} ${SERVICE_DIR}/.venv/bin/pip install --upgrade pip
+
 sudo -u ${SERVICE_USR} ${SERVICE_DIR}/.venv/bin/pip install -r requirements.txt
 
 chown -R ${SERVICE_USR}:${SERVICE_USR} ${SERVICE_DIR}
